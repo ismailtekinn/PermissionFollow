@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Premisson.Northwind.Data.Acces\Premisson.Northwind.Data.Acces.csproj" />
+    <ProjectReference Include="..\Premisson.Northwind.Entities\Premisson.Northwind.Entities.csproj" />
+    <ProjectReference Include="..\Premisson.Northwind.WebAPI\Premisson.Northwind.WebAPI.csproj" />
+  </ItemGroup>
+
+</Project>
