@@ -25,8 +25,13 @@ namespace Premisson.Northwind.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddControllers();
-            services.AddControllers(options => options.EnableEndpointRouting = false);
+
+            services.AddMvc();
+            services.AddRazorPages();
+            services.AddControllers();
+
+            //services.AddMvc(options => options.EnableEndpointRouting = false);
+
 
         }
 
@@ -40,13 +45,28 @@ namespace Premisson.Northwind.WebAPI
 
             app.UseHttpsRedirection();
 
+            //app.UseMvc(config =>
+            //{
+            //    //config.MapRoute("DefoultRoute", "{controller}/{action}");
+            //    //config.MapRoute(name: "Default", template: "{controller=Product}/{action=Get}/{id?}");
+            //});
+
+           
+
             app.UseRouting();
 
             app.UseAuthorization();
 
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllers();
+            //});
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Login}/{action=Login}/{id?}");
             });
         }
     }

@@ -10,7 +10,7 @@ namespace Premisson.Northwind.Business.Concreate
     {
         public void Login(User user)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

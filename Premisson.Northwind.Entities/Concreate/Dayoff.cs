@@ -11,9 +11,9 @@ namespace Premisson.Northwind.Entities.Concreate
     {
         [Key]
         public int Id { get; set; }
-        public int Dayoff_Type_Id { get; set; }
-        [ForeignKey("Dayoff_Type_Id")]
-        public DayoffType DayoffType { get; set; }
+        public int DayoffTypeId { get; set; }
+        //[ForeignKey("DayoffTypeId")]
+        //public DayoffType DayoffType { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime Start_Date { get; set; }
         public DateTime End_Date { get; set; }
@@ -21,12 +21,12 @@ namespace Premisson.Northwind.Entities.Concreate
         public int ProxyUserId { get; set; }
         [ForeignKey("ProxyUserId")]
         public User ProxyUser { get; set; }
-        public int User_Id { get; set; }
-        [ForeignKey("User_Id")] 
+        public int UserId { get; set; }
+        [ForeignKey("UserId")]
         public User User { get; set; }
-        public string Dayoff_Description { get; set; }
-        public bool? Is_Approve { get; set; }
-        public string File_Name { get; set; }
+        public string DayoffDescription { get; set; }
+        public bool? IsApprove { get; set; }
+        public string FileName { get; set; }
 
     }
 }

@@ -19,7 +19,7 @@ namespace Premisson.Northwind.Data.Acces.Concreate.EntityFramework
         //{
         //    optionsBuilder.UseSqlServer(@"Server=DESKTOP-4MQ6U6N\SQLEXPRESS;Database=PermissionDB;Trusted_Connection=true");
         //}
-        public DbSet<Dayoff> DayoffS { get; set; }
+        public DbSet<Dayoff> Dayoffs { get; set; }
         public DbSet<DayoffType> DayoffTypes { get; set; }
         public DbSet<Deparment> Deparments { get; set; }
         public DbSet<Role> Roles { get; set; }
