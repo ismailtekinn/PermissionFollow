@@ -11,7 +11,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Premisson.Northwind.Data.Acces\Premisson.Northwind.Data.Acces.csproj" />
     <ProjectReference Include="..\Premisson.Northwind.Entities\Premisson.Northwind.Entities.csproj" />
-    <ProjectReference Include="..\Premisson.Northwind.WebAPI\Premisson.Northwind.WebAPI.csproj" />
   </ItemGroup>
 
 </Project>

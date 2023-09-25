@@ -1,4 +1,4 @@
-﻿using Premisson.Northwind.Core.Entities;
+﻿using Premisson.Northwind.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;

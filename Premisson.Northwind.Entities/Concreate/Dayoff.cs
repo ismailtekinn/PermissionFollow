@@ -1,4 +1,4 @@
-﻿using Premisson.Northwind.Core.Entities;
+﻿using Premisson.Northwind.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,21 +12,24 @@ namespace Premisson.Northwind.Entities.Concreate
         [Key]
         public int Id { get; set; }
         public int DayoffTypeId { get; set; }
-        //[ForeignKey("DayoffTypeId")]
-        //public DayoffType DayoffType { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime Start_Date { get; set; }
         public DateTime End_Date { get; set; }
         public string Dayoff_Location { get; set; }
         public int ProxyUserId { get; set; }
-        [ForeignKey("ProxyUserId")]
-        public User ProxyUser { get; set; }
         public int UserId { get; set; }
-        [ForeignKey("UserId")]
-        public User User { get; set; }
         public string DayoffDescription { get; set; }
         public bool? IsApprove { get; set; }
         public string FileName { get; set; }
+
+        [ForeignKey("DayoffTypeId")]
+        public DayoffType DayoffType { get; set; }
+
+        [ForeignKey("ProxyUserId")]
+        public User ProxyUser { get; set; }
+
+        [ForeignKey("UserId")]
+        public User User { get; set; }
 
     }
 }

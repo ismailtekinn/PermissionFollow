@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Premisson.Northwind.Data.Acces\Premisson.Northwind.Data.Acces.csproj" />
+    <ProjectReference Include="..\Premisson.Northwind.Business\Premisson.Northwind.Business.csproj" />
   </ItemGroup>
 
 

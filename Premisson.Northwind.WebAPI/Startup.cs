@@ -1,11 +1,17 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Premisson.Northwind.Business.Abstract;
+using Premisson.Northwind.Business.Concreate;
+using Premisson.Northwind.Core.Utils.Token;
+using Premisson.Northwind.Data.Acces.Abstract;
+using Premisson.Northwind.Data.Acces.Concreate.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +35,10 @@ namespace Premisson.Northwind.WebAPI
             services.AddMvc();
             services.AddRazorPages();
             services.AddControllers();
+
+            services.AddScoped<IUserDal, EfUserDal>();
+            services.AddScoped<IUserService, UserManager>();
+            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
             //services.AddMvc(options => options.EnableEndpointRouting = false);
 

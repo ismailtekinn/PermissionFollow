@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Premisson.Northwind.Data.Acces.Concreate.EntityFramework;
 
 namespace Premisson.Northwind.Data.Acces.Migrations
 {
     [DbContext(typeof(NorthwindContext))]
-    partial class NorthwindContextModelSnapshot : ModelSnapshot
+    [Migration("20230925102057_AddedForeignKeys")]
+    partial class AddedForeignKeys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,26 +85,6 @@ namespace Premisson.Northwind.Data.Acces.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DayoffTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            IsDelete = false,
-                            Name = "Yıllık İzin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            IsDelete = false,
-                            Name = "Hastalık İzin"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            IsDelete = false,
-                            Name = "Mazeret İzin"
-                        });
                 });
 
             modelBuilder.Entity("Premisson.Northwind.Entities.Concreate.Deparment", b =>
@@ -124,29 +106,6 @@ namespace Premisson.Northwind.Data.Acces.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Deparments");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2023, 9, 25, 13, 50, 1, 626, DateTimeKind.Local).AddTicks(1326),
-                            IsDelete = false,
-                            Name = "Muhasebe Birimi"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2023, 9, 25, 13, 50, 1, 626, DateTimeKind.Local).AddTicks(9303),
-                            IsDelete = false,
-                            Name = "Yazılım Birimi"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2023, 9, 25, 13, 50, 1, 626, DateTimeKind.Local).AddTicks(9332),
-                            IsDelete = false,
-                            Name = "Satış Birimi"
-                        });
                 });
 
             modelBuilder.Entity("Premisson.Northwind.Entities.Concreate.Role", b =>
@@ -165,26 +124,6 @@ namespace Premisson.Northwind.Data.Acces.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            IsDelete = false,
-                            Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            IsDelete = false,
-                            Name = "Yönetici"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            IsDelete = false,
-                            Name = "Personel"
-                        });
                 });
 
             modelBuilder.Entity("Premisson.Northwind.Entities.Concreate.User", b =>
@@ -223,20 +162,6 @@ namespace Premisson.Northwind.Data.Acces.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "admin@corporate.com",
-                            IsActive = true,
-                            IsDelete = false,
-                            Name = "Admin",
-                            Password = "1234",
-                            RoleId = 1,
-                            Surname = "Admin"
-                        });
                 });
 
             modelBuilder.Entity("Premisson.Northwind.Entities.Concreate.UserDepartment", b =>
