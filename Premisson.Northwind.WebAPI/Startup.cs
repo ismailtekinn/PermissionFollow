@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Premisson.Northwind.Business.Abstract;
 using Premisson.Northwind.Business.Concreate;
 using Premisson.Northwind.Core.Utils.Token;
@@ -15,6 +17,7 @@ using Premisson.Northwind.Data.Acces.Concreate.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Premisson.Northwind.WebAPI
@@ -36,9 +39,31 @@ namespace Premisson.Northwind.WebAPI
             services.AddRazorPages();
             services.AddControllers();
 
+            services.AddCors(opt => opt.AddPolicy("MyCorsPolicy", policy => policy.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader()));
+            services.AddDbContext<NorthwindContext>();
             services.AddScoped<IUserDal, EfUserDal>();
             services.AddScoped<IUserService, UserManager>();
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(opt =>
+            {
+                opt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["JwtIssuer"],
+                    ValidAudience = Configuration["JwtAudience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSecurityKey"]))
+                };
+            });
 
             //services.AddMvc(options => options.EnableEndpointRouting = false);
 
@@ -61,7 +86,8 @@ namespace Premisson.Northwind.WebAPI
             //    //config.MapRoute(name: "Default", template: "{controller=Product}/{action=Get}/{id?}");
             //});
 
-           
+
+            app.UseCors("MyCorsPolicy");
 
             app.UseRouting();
 

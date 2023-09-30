@@ -21,6 +21,7 @@ namespace Premisson.Northwind.WebAPI.Controllers
         }
         
         [HttpPost]
+        [Route("Login")]
         public ActionResult Login(LoginDto model)
         {
             var response = _userService.Login(model);
