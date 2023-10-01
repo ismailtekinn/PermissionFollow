@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Premisson.Northwind.Data.Acces.Abstract
 {
-    public interface IDeparmentDal: IEntityRepository<DayoffType>
+    public interface IDeparmentDal: IEntityRepository<Deparment>
     {
     }
 }

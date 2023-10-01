@@ -43,6 +43,8 @@ namespace Premisson.Northwind.WebAPI
             services.AddDbContext<NorthwindContext>();
             services.AddScoped<IUserDal, EfUserDal>();
             services.AddScoped<IUserService, UserManager>();
+            services.AddScoped<IDeparmentDal, EfDeparmentDal>();
+            services.AddScoped<IDeparmentService, DeparmentManager>();
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
 
