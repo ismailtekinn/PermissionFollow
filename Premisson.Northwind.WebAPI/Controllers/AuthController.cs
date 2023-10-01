@@ -31,6 +31,14 @@ namespace Premisson.Northwind.WebAPI.Controllers
             
         }
 
+        [HttpPost]
+        [Route("Register")]
+        public ActionResult Register(RegisterDto register)
+        {
+            var response = _userService.Register(register);
+            return Ok(response);
+        }
+
 
         [HttpGet("Me")]
         [Authorize]
