@@ -90,6 +90,7 @@ namespace Premisson.Northwind.WebAPI
             app.UseCors("MyCorsPolicy");
 
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

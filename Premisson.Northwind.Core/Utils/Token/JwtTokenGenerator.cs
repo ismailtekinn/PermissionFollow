@@ -25,7 +25,9 @@ namespace Premisson.Northwind.Core.Utils.Token
             var expire = DateTime.Now.AddDays(int.Parse(_configuration["JwtExpireDays"]));
             Claim[] claims = new Claim[]
            {
-                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Surname, user.Surname),
+                new Claim(ClaimTypes.Role, user.RoleId.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
            };
             var token = new JwtSecurityToken(_configuration["JwtIssuer"], _configuration["JwtAudience"], claims, null, expire, cred);

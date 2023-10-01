@@ -40,6 +40,7 @@ namespace Premisson.Northwind.Business.Concreate
             {
                 FirstName = user.Name,
                 LastName = user.Surname,
+                RoleId = user.RoleId.ToString(),
                 Token = token
             };
 

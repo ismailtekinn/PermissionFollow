@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Premisson.Northwind.Business.Abstract;
 using Premisson.Northwind.Data.Acces.Concreate.EntityFramework;
 using Premisson.Northwind.Entities.Concreate;
@@ -6,6 +7,7 @@ using Premisson.Northwind.Entities.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Premisson.Northwind.WebAPI.Controllers
@@ -27,6 +29,26 @@ namespace Premisson.Northwind.WebAPI.Controllers
             var response = _userService.Login(model);
             return Ok(response);
             
+        }
+
+
+        [HttpGet("Me")]
+        [Authorize]
+        public ActionResult Me()
+        {
+            var firstName = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            var lastName = HttpContext.User.FindFirstValue(ClaimTypes.Surname);
+            var roleId = HttpContext.User.FindFirstValue(ClaimTypes.Role);
+
+            MeResponseDto meResponseDto = new MeResponseDto
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                RoleId = roleId
+
+
+            };
+            return Ok(meResponseDto);
         }
     }
 }
