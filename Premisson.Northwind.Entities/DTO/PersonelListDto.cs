@@ -15,5 +15,7 @@ namespace Premisson.Northwind.Entities.DTO
         public string IsDelete { get; set; }
         public bool IsActive { get; set; }
         public string CreatedAt { get; set; }
+        public int DepartmentId { get; set; }
+        public bool IsManager { get; set; }
     }
 }

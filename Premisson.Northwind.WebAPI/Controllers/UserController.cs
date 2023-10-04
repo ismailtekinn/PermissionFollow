@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Premisson.Northwind.Business.Abstract;
+using Premisson.Northwind.Entities.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,13 @@ namespace Premisson.Northwind.WebAPI.Controllers
             var personelList = _userService.GerPersonelList(page,limit);
             return Ok(personelList);
 
+        }
+
+        [HttpPost("personel-update")]
+        public ActionResult PersonelUpdate(UpdatePersonelDto model)
+        {
+            var updateResponse = _userService.UpdatePersonel(model);
+            return Ok(updateResponse);
         }
     }
 }

@@ -18,9 +18,9 @@ namespace Premisson.Northwind.Business.Concreate
         private readonly IUserDepartment _userDepartment;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
-        
 
-        public UserManager(IUserDal userDal, IJwtTokenGenerator jwtTokenGenerator,IUserDepartment userDepartment)
+
+        public UserManager(IUserDal userDal, IJwtTokenGenerator jwtTokenGenerator, IUserDepartment userDepartment)
         {
             _userDal = userDal;
             _jwtTokenGenerator = jwtTokenGenerator;
@@ -37,7 +37,7 @@ namespace Premisson.Northwind.Business.Concreate
             }
             if (user.Password != model.Password)
             {
-                return new Response<LoginResponseDto>(false,"Kullanıcı adı vey şifre hatalı");
+                return new Response<LoginResponseDto>(false, "Kullanıcı adı vey şifre hatalı");
 
             }
             string token = _jwtTokenGenerator.GenerateToken(user);
@@ -129,7 +129,7 @@ namespace Premisson.Northwind.Business.Concreate
 
             var query = _userDepartment.GetQueryable(x => x.User.RoleId != (int)RoleEnums.Admin);
 
-            if (limit<10)
+            if (limit < 10)
             {
                 limit = 10;
             }
@@ -154,12 +154,48 @@ namespace Premisson.Northwind.Business.Concreate
                 IsActive = s.User.IsActive,
                 IsDelete = s.User.IsDelete ? "Evet" : "---",
                 LastName = s.User.Surname,
-                RoleName = s.User.Role.Name
+                RoleName = s.User.Role.Name,
+                DepartmentId = s.DepartmentId,
+                IsManager = s.IsManager
             }).ToList();
             return new Response<List<PersonelListDto>>(true, returnModel);
 
 
         }
 
+        public Response<bool> UpdatePersonel(UpdatePersonelDto updateModel)
+        {
+            var user = _userDal.Get(x => x.Id == updateModel.Id);
+
+            int roleId = (int)RoleEnums.Personel;
+            if (updateModel.IsManager)
+            {
+                var existManager = _userDepartment.Get(x => x.User.IsActive && !x.User.IsDelete && x.DepartmentId == updateModel.DepartmentId && x.IsManager && x.UserId != updateModel.Id);
+                if (existManager != null)
+                {
+                    return new Response<bool>(false, "Bu birimde zaten yönetici bulunmaktadır ! ");
+                }
+                roleId = (int)RoleEnums.Manager;
+            }
+
+            user.Name = updateModel.Name;
+            user.Surname = updateModel.LastName;
+            user.Email = updateModel.Email;
+            user.RoleId = roleId;
+            _userDal.Update(user);
+
+            var userDepartment = _userDepartment.Get(x => x.UserId == updateModel.Id);
+            userDepartment.DepartmentId = updateModel.DepartmentId;
+            userDepartment.IsManager = updateModel.IsManager;
+            _userDepartment.Update(userDepartment);
+
+            bool isSuccess = _userDal.Complate();
+            if (!isSuccess)
+            {
+                return new Response<bool>(false, "Bir hata oluştu");
+            }
+            return new Response<bool>(true);
+
+        }
     }
 }
