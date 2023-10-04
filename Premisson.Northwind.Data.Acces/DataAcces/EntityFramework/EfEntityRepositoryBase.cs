@@ -37,8 +37,14 @@ namespace Premisson.Northwinds.DataAcces.EntityFramework
                 query = includes.Aggregate(query, (current, include) => current.Include(include));
 
             return query.SingleOrDefault();
+        }
 
-
+        public IQueryable<TEntity> GetQueryable(Expression<Func<TEntity,bool>>filter = null)
+        {
+            IQueryable<TEntity> query = filter == null
+                ? _context.Set<TEntity>()
+                : _context.Set<TEntity>().Where(filter);
+            return query;
         }
 
         public List<TEntity> GetList(Expression<Func<TEntity, bool>> filter = null, params Expression<Func<TEntity, object>>[] include)

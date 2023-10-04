@@ -19,9 +19,9 @@ namespace Premisson.Northwind.WebAPI.Controllers
         }
 
         [HttpGet("personel-list")]
-        public ActionResult GetPersonelList()
+        public ActionResult GetPersonelList(int page, int limit)
         {
-            var personelList = _userService.GerPersonelList();
+            var personelList = _userService.GerPersonelList(page,limit);
             return Ok(personelList);
 
         }

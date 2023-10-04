@@ -11,7 +11,7 @@ namespace Premisson.Northwind.Business.Abstract
     {
         Response<LoginResponseDto> Login(LoginDto model);
         Response<bool> Register(RegisterDto registerModel);
-        Response<List<PersonelListDto>> GerPersonelList();
+        Response<List<PersonelListDto>> GerPersonelList(int page, int limit);
 
     }
 }

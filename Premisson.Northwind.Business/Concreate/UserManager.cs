@@ -111,25 +111,55 @@ namespace Premisson.Northwind.Business.Concreate
             return new Response<bool>(true);
 
         }
-        //public Response<List<PersonelListDto>> GerPersonelList()
-        //{
-        //    var users = _userDepartment.GetList(x => x.User.RoleId != (int)RoleEnums.Admin, x => x.User, x => x.User.Role, x => x.Deparment);
-        //    var returnModel = users.Select(s => new PersonelListDto
-        //    {
-        //        Birim = s.Deparment.Name,
-        //        CreatedAt= s.User.CreatedAt.ToString("dd/MM/yyyy"),
-        //        Email = s.User.Email,
-        //        FirstName = s.User.Name,
-        //        Id = s.UserId,
-        //        IsActive = s.User.IsActive,
-        //        IsDelete = s.User.IsDelete ? "Evet" : "---",
-        //        LastName = s.User.Surname,
-        //        RoleName = s.User.Role.Name
-        //    }).ToList();
-        //    return new Response<List<PersonelListDto>>(true, returnModel);
+        public Response<List<PersonelListDto>> GerPersonelList(int page, int limit)
+        {
+            //var users = _userDepartment.GetList(x => x.User.RoleId != (int)RoleEnums.Admin, x => x.User, x => x.User.Role, x => x.Deparment);
+            //var returnModel = users.Select(s => new PersonelListDto
+            //{
+            //    Birim = s.Deparment.Name,
+            //    CreatedAt = s.User.CreatedAt.ToString("dd/MM/yyyy"),
+            //    Email = s.User.Email,
+            //    FirstName = s.User.Name,
+            //    Id = s.UserId,
+            //    IsActive = s.User.IsActive,
+            //    IsDelete = s.User.IsDelete ? "Evet" : "---",
+            //    LastName = s.User.Surname,
+            //    RoleName = s.User.Role.Name
+            //}).ToList();
+
+            var query = _userDepartment.GetQueryable(x => x.User.RoleId != (int)RoleEnums.Admin);
+
+            if (limit<10)
+            {
+                limit = 10;
+            }
+            if (page <= 0)
+            {
+                page = 1;
+            }
+            if (page == 1)
+            {
+                query = query.Take(limit);
+            }
+            else
+                query = query.Skip((page - 1) * limit).Take(limit);
+
+            var returnModel = query.Select(s => new PersonelListDto
+            {
+                Birim = s.Deparment.Name,
+                CreatedAt = s.User.CreatedAt.ToString("dd/MM/yyyy"),
+                Email = s.User.Email,
+                FirstName = s.User.Name,
+                Id = s.UserId,
+                IsActive = s.User.IsActive,
+                IsDelete = s.User.IsDelete ? "Evet" : "---",
+                LastName = s.User.Surname,
+                RoleName = s.User.Role.Name
+            }).ToList();
+            return new Response<List<PersonelListDto>>(true, returnModel);
 
 
-        //}
+        }
 
     }
 }
