@@ -41,10 +41,15 @@ namespace Premisson.Northwind.WebAPI
 
             services.AddCors(opt => opt.AddPolicy("MyCorsPolicy", policy => policy.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader()));
             services.AddDbContext<NorthwindContext>();
+
             services.AddScoped<IUserDal, EfUserDal>();
             services.AddScoped<IUserService, UserManager>();
+
             services.AddScoped<IDeparmentDal, EfDeparmentDal>();
             services.AddScoped<IDeparmentService, DeparmentManager>();
+
+            services.AddScoped<IUserDepartment, EfUserDepartmentDal>();
+
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
 

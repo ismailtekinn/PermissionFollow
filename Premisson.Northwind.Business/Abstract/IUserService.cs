@@ -10,7 +10,8 @@ namespace Premisson.Northwind.Business.Abstract
     public interface IUserService
     {
         Response<LoginResponseDto> Login(LoginDto model);
-        Response<RegisterResponseDto> Register(RegisterDto registerModel);
+        Response<bool> Register(RegisterDto registerModel);
+        Response<List<PersonelListDto>> GerPersonelList();
 
     }
 }
