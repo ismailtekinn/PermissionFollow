@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -24,9 +25,11 @@ namespace Premisson.Northwind.WebAPI
 {
     public class Startup
     {
+        //private IHttpContextAccessor HttpContextAccessor { get; set; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            //HttpContextAccessor = httpContextAccessor;
         }
 
         public IConfiguration Configuration { get; }
@@ -48,9 +51,16 @@ namespace Premisson.Northwind.WebAPI
             services.AddScoped<IDeparmentDal, EfDeparmentDal>();
             services.AddScoped<IDeparmentService, DeparmentManager>();
 
+            services.AddScoped<IDayoffDal, EfDayoffDal>();
+            services.AddScoped<IDayoffService, DayoffManager>();
+
+            services.AddScoped<IDayoffTypeDal, EfDayoffTypeDal>();
+
             services.AddScoped<IUserDepartment, EfUserDepartmentDal>();
 
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+            services.AddHttpContextAccessor();
 
 
             services.AddAuthentication(opt =>

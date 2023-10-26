@@ -16,12 +16,16 @@ namespace Premisson.Northwind.Entities.Concreate
         public string Email { get; set; }
         public string Password { get; set; }
         public int RoleId { get; set; }
-        [ForeignKey("RoleId")]
-        public Role Role { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool IsDelete { get; set; }
         public bool IsActive { get; set; }
-       
+
+        [ForeignKey("RoleId")]
+        public Role Role { get; set; }
+
+        public UserDepartment UserDepartment { get; set; }
+
+
 
     }
 }

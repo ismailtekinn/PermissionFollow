@@ -21,7 +21,7 @@ namespace Premisson.Northwind.WebAPI.Controllers
         }
 
         [HttpGet("departments")]
-        [Authorize]
+        //[Authorize]
         public ActionResult GetDepartment()
         {
             var department = _deparmentService.GetDepartments();

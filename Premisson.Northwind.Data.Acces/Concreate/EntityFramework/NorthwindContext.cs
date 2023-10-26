@@ -11,7 +11,7 @@ namespace Premisson.Northwind.Data.Acces.Concreate.EntityFramework
     public class NorthwindContext:DbContext
     {
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"workstation id=hrproject.mssql.somee.com;packet size=4096;
             user id=skarakayaa_SQLLogin_1;pwd=ftcg31yki6;data source=hrproject.mssql.somee.com;persist security info=False;initial catalog=hrproject");

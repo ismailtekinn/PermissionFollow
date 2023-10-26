@@ -1,4 +1,5 @@
-﻿using Premisson.Northwind.Business.Abstract;
+﻿using Microsoft.AspNetCore.Http;
+using Premisson.Northwind.Business.Abstract;
 using Premisson.Northwind.Core.Utils.Enums;
 using Premisson.Northwind.Core.Utils.Response;
 using Premisson.Northwind.Core.Utils.Token;
@@ -6,8 +7,10 @@ using Premisson.Northwind.Data.Acces.Abstract;
 using Premisson.Northwind.Entities.Concreate;
 using Premisson.Northwind.Entities.DTO;
 using System;
+
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 
 namespace Premisson.Northwind.Business.Concreate
@@ -17,20 +20,22 @@ namespace Premisson.Northwind.Business.Concreate
         private readonly IUserDal _userDal;
         private readonly IUserDepartment _userDepartment;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
 
 
-        public UserManager(IUserDal userDal, IJwtTokenGenerator jwtTokenGenerator, IUserDepartment userDepartment)
+        public UserManager(IUserDal userDal, IJwtTokenGenerator jwtTokenGenerator, IUserDepartment userDepartment, IHttpContextAccessor httpContextAccessor)
         {
             _userDal = userDal;
             _jwtTokenGenerator = jwtTokenGenerator;
             _userDepartment = userDepartment;
+            _httpContextAccessor = httpContextAccessor;
 
         }
 
         public Response<LoginResponseDto> Login(LoginDto model)
         {
-            User user = _userDal.Get(x => x.Email == model.Email);
+            User user = _userDal.Get(x => x.Email == model.Email );
             if (user is null)
             {
                 return new Response<LoginResponseDto>(false, "Kullanıcı Bulunamadı");
@@ -40,7 +45,9 @@ namespace Premisson.Northwind.Business.Concreate
                 return new Response<LoginResponseDto>(false, "Kullanıcı adı vey şifre hatalı");
 
             }
-            string token = _jwtTokenGenerator.GenerateToken(user);
+            UserDepartment ud = _userDepartment.Get(x => x.UserId== user.Id );
+
+            string token = _jwtTokenGenerator.GenerateToken(user,ud?.DepartmentId);
 
 
             LoginResponseDto loginResponseDto = new LoginResponseDto
@@ -48,6 +55,7 @@ namespace Premisson.Northwind.Business.Concreate
                 FirstName = user.Name,
                 LastName = user.Surname,
                 RoleId = user.RoleId.ToString(),
+                IsActive = user.IsActive.ToString(),
                 Token = token
             };
 
@@ -55,7 +63,7 @@ namespace Premisson.Northwind.Business.Concreate
         }
 
 
-        Response<bool> IUserService.Register(RegisterDto registerModel)
+       public Response<bool> Register(RegisterDto registerModel)
         {
             int length = 10;
             string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
@@ -129,6 +137,14 @@ namespace Premisson.Northwind.Business.Concreate
 
             var query = _userDepartment.GetQueryable(x => x.User.RoleId != (int)RoleEnums.Admin);
 
+            var departmentIdStr = _httpContextAccessor.HttpContext.User.FindFirstValue("DepartmentId");
+
+            if (!string.IsNullOrEmpty(departmentIdStr))
+            {
+                int departmentId = Convert.ToInt32(departmentIdStr);
+                query = query.Where(x => x.DepartmentId == departmentId);
+            }
+
             if (limit < 10)
             {
                 limit = 10;
@@ -189,6 +205,68 @@ namespace Premisson.Northwind.Business.Concreate
             userDepartment.IsManager = updateModel.IsManager;
             _userDepartment.Update(userDepartment);
 
+            bool isSuccess = _userDal.Complate();
+            if (!isSuccess)
+            {
+                return new Response<bool>(false, "Bir hata oluştu");
+            }
+            return new Response<bool>(true);
+
+        }
+
+        public Response<bool> DeleteUser(int userId)
+        {
+            User user = _userDal.Get(x => x.Id == userId);
+            UserDepartment userDepartment = _userDepartment.Get(x => x.UserId == userId);
+
+            _userDal.Delete(user);
+            _userDepartment.Delete(userDepartment);
+
+            bool isSucces = _userDal.Complate();
+            if (!isSucces)
+            {
+                return new Response<bool>(false, "Bir Hata Oluştu");
+            }
+            return new Response<bool>(true);
+        }
+
+        public Response<List<UserDto>> GetUsers()
+        {
+            
+
+            var query = _userDepartment.GetQueryable(x => x.User.RoleId == (int)RoleEnums.Personel);
+
+            var departmentIdStr = _httpContextAccessor.HttpContext.User.FindFirstValue("DepartmentId");
+            
+
+            if (!string.IsNullOrEmpty(departmentIdStr))
+            {
+                int departmentId = Convert.ToInt32(departmentIdStr);
+                query = query.Where(x => x.DepartmentId == departmentId);
+            }
+            
+            var returnModel = query.Select(s => new UserDto
+            {
+               Id = s.Id,
+               Name = s.User.Name,
+               LastName = s.User.Surname,
+               FullName = s.User.Name + " " + s.User.Surname
+               
+
+            }).ToList();
+
+            return new Response<List<UserDto>>(true, returnModel);
+        }
+
+        public Response<bool> UpdatePassword(PasswordDto password)
+        {
+            var user = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            int userId = Convert.ToInt32(user);
+            User u = _userDal.Get(x => x.Id == userId);
+            u.Password = password.Password;
+            u.IsActive = true;
+
+            _userDal.Update(u);
             bool isSuccess = _userDal.Complate();
             if (!isSuccess)
             {

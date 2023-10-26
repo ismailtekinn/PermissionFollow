@@ -12,14 +12,15 @@ namespace Premisson.Northwind.Entities.Concreate
         [Key]
         public int Id { get; set; }
         public int UserId { get; set; }
-        [ForeignKey("UserId")]
-        public User User { get; set; }
         public int DepartmentId { get; set; }
-        [ForeignKey("DepartmentId")]
-        public Deparment Deparment { get; set; }
         public bool IsManager { get; set; }
         public bool IsDelete { get; set; }
         public DateTime CreatedAt { get; set; }
 
+        [ForeignKey("UserId")]
+        public User User { get; set; }
+
+        [ForeignKey("DepartmentId")]
+        public Deparment Deparment { get; set; }
     }
 }

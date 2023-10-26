@@ -4,10 +4,8 @@ using System.Text;
 
 namespace Premisson.Northwind.Entities.DTO
 {
-    public class LoginDto
+    public class UpdateDayoffDto : PermissionDto
     {
-        public string Email { get; set; }
-        public string  Password { get; set; }
-
+        public int Id { get; set; }
     }
 }

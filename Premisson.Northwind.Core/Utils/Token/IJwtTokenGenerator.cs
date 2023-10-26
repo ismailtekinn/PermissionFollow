@@ -5,7 +5,7 @@ namespace Premisson.Northwind.Core.Utils.Token
 {
    public interface IJwtTokenGenerator
     {
-        string GenerateToken(User user);
+        string GenerateToken(User user, int? departmentId = null);
 
     }
 }

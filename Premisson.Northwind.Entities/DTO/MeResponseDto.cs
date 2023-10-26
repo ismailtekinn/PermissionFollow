@@ -6,5 +6,6 @@ namespace Premisson.Northwind.Entities.DTO
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string RoleId { get; set; }
+        public string IsActive { get; set; }
     }
 }

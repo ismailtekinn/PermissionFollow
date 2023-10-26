@@ -18,7 +18,9 @@ namespace Premisson.Northwind.Core.Utils.Token
             _configuration = configuration;
         }
 
-        public string GenerateToken(User user)
+        //public string GenerateToken(User user, int departmentId)
+        //public string GenerateToken(User user, UserDepartment ud)
+        public string GenerateToken(User user, int? departmentId = null)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSecurityKey"]));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -27,6 +29,8 @@ namespace Premisson.Northwind.Core.Utils.Token
            {
                 new Claim(ClaimTypes.Name, user.Name),
                 new Claim(ClaimTypes.Surname, user.Surname),
+                new Claim("DepartmentId", departmentId.HasValue ? departmentId.Value.ToString() : " "),
+                new Claim("IsActive", user.IsActive.ToString() ,ClaimValueTypes.Boolean),
                 new Claim(ClaimTypes.Role, user.RoleId.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
            };
