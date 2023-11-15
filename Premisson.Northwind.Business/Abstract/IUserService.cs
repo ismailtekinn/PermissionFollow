@@ -14,11 +14,9 @@ namespace Premisson.Northwind.Business.Abstract
         Response<List<PersonelListDto>> GerPersonelList(int page, int limit);
         Response<bool> UpdatePersonel(UpdatePersonelDto updateModel);
         Response<bool> DeleteUser(int userId);
-
         Response<List<UserDto>> GetUsers();
-
-        Response<bool> UpdatePassword(PasswordDto password);
-        //List<PersonelListDto> GetUsers();
+        Response<LoginResponseDto> UpdatePassword(PasswordDto password);
+        Response<List<MainInformationDto>> GetMainInformation();
 
     }
 }

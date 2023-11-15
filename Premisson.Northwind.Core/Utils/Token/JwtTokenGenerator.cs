@@ -29,7 +29,7 @@ namespace Premisson.Northwind.Core.Utils.Token
            {
                 new Claim(ClaimTypes.Name, user.Name),
                 new Claim(ClaimTypes.Surname, user.Surname),
-                new Claim("DepartmentId", departmentId.HasValue ? departmentId.Value.ToString() : " "),
+                new Claim("DepartmentId", departmentId.HasValue ? departmentId.Value.ToString() : ""),
                 new Claim("IsActive", user.IsActive.ToString() ,ClaimValueTypes.Boolean),
                 new Claim(ClaimTypes.Role, user.RoleId.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())

@@ -45,7 +45,7 @@ namespace Premisson.Northwind.WebAPI.Controllers
         [HttpGet("dayoff-list")]
         public ActionResult GetDayoffList(int page, int limit)
         {
-            var dayoffModel = _dayoffService.GetDayoffList(page,limit);
+            var dayoffModel = _dayoffService.GetDayoffList(page, limit);
             return Ok(dayoffModel);
         }
 
@@ -63,18 +63,10 @@ namespace Premisson.Northwind.WebAPI.Controllers
             return Ok(permissionModel);
         }
 
-        [HttpPost("to-approve")] 
-        public ActionResult ConfirmPermission(int dayofId)
+        [HttpPost("to-approve")]
+        public ActionResult ConfirmPermission(DayoffConfirmDto model)
         {
-            var response = _dayoffService.Approve(dayofId);
-            return Ok(response);
-
-        }
-
-        [HttpPost("to-reject")]
-        public ActionResult DenyPermission(int dayofId)
-        {
-            var response = _dayoffService.Reject(dayofId);
+            var response = _dayoffService.Approve(model);
             return Ok(response);
 
         }

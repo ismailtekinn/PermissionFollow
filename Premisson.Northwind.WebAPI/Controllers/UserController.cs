@@ -59,5 +59,13 @@ namespace Premisson.Northwind.WebAPI.Controllers
 
             return Ok(updateModel);
         }
+
+        [HttpGet("main-information")]
+        [Authorize]
+        public ActionResult GetMainInformation()
+        {
+            var mainInformationResponse = _userService.GetMainInformation();
+            return Ok(mainInformationResponse);
+        }
     }
 }
