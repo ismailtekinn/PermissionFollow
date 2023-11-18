@@ -196,10 +196,10 @@ namespace Premisson.Northwind.Business.Concreate
             return returnModel;
         }
 
-        public Response<bool> Approve(int id)
+        public Response<bool> Approve(DayoffConfirmDto model)
         {
-            Dayoff dayoff = _dayoffDal.Get(x => x.Id == id);
-            dayoff.IsApprove = true;
+            Dayoff dayoff = _dayoffDal.Get(x => x.Id == model.DayoffId);
+            dayoff.IsApprove = model.IsApprove;
 
 
             _dayoffDal.Update(dayoff);
@@ -211,6 +211,22 @@ namespace Premisson.Northwind.Business.Concreate
             return new Response<bool>(true);
 
         }
+
+        //public Response<bool> Approve(int id)
+        //{
+        //    Dayoff dayoff = _dayoffDal.Get(x => x.Id == id);
+        //    dayoff.IsApprove = true;
+
+
+        //    _dayoffDal.Update(dayoff);
+        //    bool isSuccess = _dayoffDal.Complate();
+        //    if (!isSuccess)
+        //    {
+        //        return new Response<bool>(false, "Bir Hata Oluştu");
+        //    }
+        //    return new Response<bool>(true);
+
+        //}
 
         public Response<bool> Reject(int id)
         {

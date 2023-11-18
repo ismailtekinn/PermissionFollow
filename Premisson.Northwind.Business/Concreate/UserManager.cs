@@ -43,13 +43,16 @@ namespace Premisson.Northwind.Business.Concreate
                 return new Response<LoginResponseDto>(false, "Kullanıcı Bulunamadı");
             }
 
+            //byte[] passwordHashByte = HashPasswordV2(model.Password);
+            //string passwordHash = Convert.ToBase64String(passwordHashByte);
+
             PasswordVerificationResult verifyPassword = VerifyHashedPassword(user.Password, model.Password);
             if (verifyPassword != PasswordVerificationResult.Success)
             {
                 return new Response<LoginResponseDto>(false, "Kullanıcı adı veya şifre hatalı");
             }
-            UserDepartment ud = _userDepartment.Get(x => x.UserId == user.Id);
-            string token = _jwtTokenGenerator.GenerateToken(user, ud?.DepartmentId);
+            UserDepartment userDepartment = _userDepartment.Get(x => x.UserId == user.Id);
+            string token = _jwtTokenGenerator.GenerateToken(user, userDepartment?.DepartmentId);
 
             LoginResponseDto loginResponseDto = new LoginResponseDto
             {
@@ -316,12 +319,11 @@ namespace Premisson.Northwind.Business.Concreate
         #region PRIVATE METHODS
         private bool VerifyHashedPasswordV2(byte[] hashedPassword, string password)
         {
-            const KeyDerivationPrf Pbkdf2Prf = KeyDerivationPrf.HMACSHA1; // default for Rfc2898DeriveBytes
-            const int Pbkdf2IterCount = 1000; // default for Rfc2898DeriveBytes
-            const int Pbkdf2SubkeyLength = 256 / 8; // 256 bits
-            const int SaltSize = 128 / 8; // 128 bits
+            const KeyDerivationPrf Pbkdf2Prf = KeyDerivationPrf.HMACSHA1; 
+            const int Pbkdf2IterCount = 1000; 
+            const int Pbkdf2SubkeyLength = 256 / 8; 
+            const int SaltSize = 128 / 8; 
 
-            // We know ahead of time the exact length of a valid hashed password payload.
             if (hashedPassword.Length != 1 + SaltSize + Pbkdf2SubkeyLength)
             {
                 return false; // bad size
@@ -333,7 +335,6 @@ namespace Premisson.Northwind.Business.Concreate
             byte[] expectedSubkey = new byte[Pbkdf2SubkeyLength];
             Buffer.BlockCopy(hashedPassword, 1 + salt.Length, expectedSubkey, 0, expectedSubkey.Length);
 
-            // Hash the incoming password and verify it
             byte[] actualSubkey = KeyDerivation.Pbkdf2(password, salt, Pbkdf2Prf, Pbkdf2IterCount, Pbkdf2SubkeyLength);
             return CryptographicOperations.FixedTimeEquals(actualSubkey, expectedSubkey);
         }
@@ -341,18 +342,17 @@ namespace Premisson.Northwind.Business.Concreate
         private byte[] HashPasswordV2(string password)
         {
             var rng = RandomNumberGenerator.Create();
-            const KeyDerivationPrf Pbkdf2Prf = KeyDerivationPrf.HMACSHA1; // default for Rfc2898DeriveBytes
-            const int Pbkdf2IterCount = 1000; // default for Rfc2898DeriveBytes
-            const int Pbkdf2SubkeyLength = 256 / 8; // 256 bits
-            const int SaltSize = 128 / 8; // 128 bits
+            const KeyDerivationPrf Pbkdf2Prf = KeyDerivationPrf.HMACSHA1;
+            const int Pbkdf2IterCount = 1000; 
+            const int Pbkdf2SubkeyLength = 256 / 8; 
+            const int SaltSize = 128 / 8; 
 
-            // Produce a version 2 (see comment above) text hash.
             byte[] salt = new byte[SaltSize];
             rng.GetBytes(salt);
             byte[] subkey = KeyDerivation.Pbkdf2(password, salt, Pbkdf2Prf, Pbkdf2IterCount, Pbkdf2SubkeyLength);
 
             var outputBytes = new byte[1 + SaltSize + Pbkdf2SubkeyLength];
-            outputBytes[0] = 0x00; // format marker
+            outputBytes[0] = 0x00; 
             Buffer.BlockCopy(salt, 0, outputBytes, 1, SaltSize);
             Buffer.BlockCopy(subkey, 0, outputBytes, 1 + SaltSize, Pbkdf2SubkeyLength);
             return outputBytes;
@@ -362,14 +362,13 @@ namespace Premisson.Northwind.Business.Concreate
         {
             byte[] decodedHashedPassword = Convert.FromBase64String(hashedPassword);
 
-            // read the format marker from the hashed password
             if (decodedHashedPassword.Length == 0)
             {
                 return PasswordVerificationResult.Failed;
             }
             if (VerifyHashedPasswordV2(decodedHashedPassword, providedPassword))
             {
-                // This is an old password hash format - the caller needs to rehash if we're not running in an older compat mode.
+                
                 return PasswordVerificationResult.Success;
             }
             else
