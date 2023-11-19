@@ -228,19 +228,55 @@ namespace Premisson.Northwind.Business.Concreate
 
         //}
 
-        public Response<bool> Reject(int id)
+        //public Response<bool> Reject(int id)
+        //{
+        //    Dayoff dayoff = _dayoffDal.Get(x => x.Id == id);
+        //    dayoff.IsApprove = false;
+
+        //    _dayoffDal.Update(dayoff);
+
+        //    bool isSuccess = _dayoffDal.Complate();
+        //    if (!isSuccess)
+        //    {
+        //        return new Response<bool>(false, "Bir Hata Oluştu");
+        //    }
+        //    return new Response<bool>(true);
+        //}
+
+        public Response<List<DayoffListDto>> GetDayoffPersonelList(int page, int limit)
         {
-            Dayoff dayoff = _dayoffDal.Get(x => x.Id == id);
-            dayoff.IsApprove = false;
-
-            _dayoffDal.Update(dayoff);
-
-            bool isSuccess = _dayoffDal.Complate();
-            if (!isSuccess)
+            var query = _dayoffDal.GetQueryable(x => x.User.RoleId != (int)RoleEnums.Admin);
+            if (limit < 10)
             {
-                return new Response<bool>(false, "Bir Hata Oluştu");
+                limit = 10;
             }
-            return new Response<bool>(true);
+            if (page <= 0)
+            {
+                page = 1;
+            }
+            if (page == 1)
+            {
+                query = query.Take(limit);
+            }
+            else
+                query = query.Skip((page - 1) * limit).Take(limit);
+
+            var returnModel = query.Select(x => new DayoffListDto
+            {
+                Id = x.Id,
+                Name = x.User.Name,
+                Surname= x.User.Surname,
+                DayoffTypeId = x.DayoffTypeId,
+                DayoffTypeName = x.DayoffType.Name,
+                Start_Date = x.Start_Date,
+                End_Date = x.End_Date,
+                Dayoff_Location = x.Dayoff_Location,
+                ProxyUser_Id = x.ProxyUserId,
+                Dayoff_Description = x.DayoffDescription,
+                IsApprove = x.IsApprove
+            }).ToList();
+
+            return new Response<List<DayoffListDto>> (true, returnModel);
         }
     }
 }

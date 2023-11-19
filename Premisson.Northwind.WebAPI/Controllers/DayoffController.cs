@@ -70,5 +70,13 @@ namespace Premisson.Northwind.WebAPI.Controllers
             return Ok(response);
 
         }
+
+
+        [HttpGet("personal-dayoff-list")]
+        public ActionResult GetDayoffPersonelList(int page, int limit)
+        {
+            var dayoffModel = _dayoffService.GetDayoffPersonelList(page, limit);
+            return Ok(dayoffModel);
+        }
     }
 }

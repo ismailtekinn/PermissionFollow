@@ -15,6 +15,7 @@ namespace Premisson.Northwind.Business.Abstract
         Response<bool> UpdateDayoff(UpdateDayoffDto updateModel);
         Response<bool> DeleteDayoff(int dayoff);
         Response<bool> Approve(DayoffConfirmDto model);
+        Response<List<DayoffListDto>> GetDayoffPersonelList(int page, int limit);
 
     }
 }
